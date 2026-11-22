@@ -1,5 +1,7 @@
 # Why does the report show $45 instead of $33?
 
+[Lesson slides (PDF)](slides.pdf)
+
 Public demo · 18 minutes of video plus 30–45 minutes of practice. Trace a query from DataGrip to the data, isolate a retry and reconcile a gross capture metric.
 
 ## Start the lab

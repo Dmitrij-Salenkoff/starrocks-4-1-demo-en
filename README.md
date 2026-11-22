@@ -4,7 +4,7 @@ One purchase was delivered twice. Why did the report rise from $33 to $45, and w
 
 **Tools:** StarRocks 4.1.4 · Docker Compose · Python 3.14 · uv · VS Code · DataGrip.
 
-[Workstation setup](START.md) · [75-second preview](preview/demo.mp4) · [Captions](preview/demo.srt)
+[Workstation setup](START.md) · [Demo lesson slides (PDF)](weeks/01/01/slides.pdf)
 
 ## Take the demo lab
 
