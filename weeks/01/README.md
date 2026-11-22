@@ -1,5 +1,5 @@
-# Week 1 · Getting to know StarRocks
+# Week 1 · Analytical databases and the query path in StarRocks
 
-StarRocks is an analytical database. It helps answer questions across many records. In your first lesson you will count cups sold at a small café, add one receipt and see the answer change. The commands and queries are provided.
+Look at two ways to store the same receipts, compare PostgreSQL, DuckDB, ClickHouse, BigQuery and StarRocks, then follow one query through the database. In the lab you will see which node accepts the request, which node reads the data and how individual sales add up to six cups for the day.
 
-- [01 · Your first query in StarRocks](01/README.md) · [Lesson slides (PDF)](01/slides.pdf)
+- [01 · Analytical databases and the StarRocks architecture](01/README.md) · [Lesson slides (PDF)](01/slides.pdf)

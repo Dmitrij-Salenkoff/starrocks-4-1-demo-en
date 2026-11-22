@@ -1,15 +1,15 @@
 # Demo lab · StarRocks 4.1
 
-StarRocks is an analytical database. It helps answer questions across many records. In your first lesson you will count cups sold at a small café, add one receipt and see the answer change. The commands and queries are provided.
+Look at two ways to store the same receipts, compare PostgreSQL, DuckDB, ClickHouse, BigQuery and StarRocks, then follow one query through the database. In the lab you will see which node accepts the request, which node reads the data and how individual sales add up to six cups for the day.
 
 **Tools:** StarRocks 4.1.4 · Docker Compose · Python 3.14 · uv · VS Code · DataGrip.
 
-[Workstation setup](START.md) · [Demo lesson slides (PDF)](weeks/01/01/slides.pdf)
+[Start the first lesson](weeks/01/01/README.md) · [Demo lesson slides (PDF)](weeks/01/01/slides.pdf) · [Set up the lab](START.md)
 
 ## Take the demo lab
 
-[Your first query in StarRocks](weeks/01/01/README.md)
+[Analytical databases and the StarRocks architecture](weeks/01/01/README.md)
 
-Open the lesson guide above for a walkthrough from setup to your first answer in DataGrip. Allow 18 minutes for the video and another 35 minutes for hands-on practice after installation.
+Start with the slides or lesson guide. Open the workstation setup instructions when you reach the lab. Allow 38 minutes for the video and another 45 minutes for independent work once the software is ready.
 
 The full course spans twelve weeks. From this first report you will learn how data gets into the database, how the database works and how to investigate a slow or out-of-date report.

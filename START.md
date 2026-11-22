@@ -1,6 +1,6 @@
-# Getting ready for your first lesson
+# Workstation setup for the first lab
 
-A café has several receipts and wants to count the cups it sold in a day. The lesson supplies the receipts. You will start StarRocks on your computer, then use DataGrip to ask the database a question and see the answer as a table.
+Open the [lesson guide](weeks/01/01/README.md) or the [slides](weeks/01/01/slides.pdf) for the first part. When you reach the query trace, use this page to start StarRocks 4.1.4 on your laptop and connect from DataGrip.
 
 ## 1. Open the materials
 
@@ -36,7 +36,7 @@ In **Database Explorer** choose **+ → Data Source → MySQL**. StarRocks under
 | Password | Leave empty |
 | Database | `course` |
 
-If offered, click **Download missing driver files**. Click **Test Connection**, then **OK**. Open the [first lesson](weeks/01/01/README.md) to run a supplied query and compare its answer with the receipts. [DataGrip connection settings](https://www.jetbrains.com/help/datagrip/mysql.html)
+If offered, click **Download missing driver files**. Click **Test Connection**, then **OK**. Return to the [lab](weeks/01/01/README.md). Open [architecture.sql](weeks/01/01/architecture.sql) to inspect the version, mode and nodes. In [plan.sql](weeks/01/01/plan.sql), run the statements individually to compare the plan, the sum and the execution profile. [DataGrip connection settings](https://www.jetbrains.com/help/datagrip/mysql.html)
 
 ## If something stops you
 
