@@ -1,12 +1,23 @@
-# StarRocks 4.1 in practice · Demo
+# Demo lab · StarRocks 4.1
 
-Why is Tuesday’s net revenue negative while Wednesday’s is zero? Spin up StarRocks and verify the answer against seven payment events.
+One purchase was delivered twice. Why did the report rise from $33 to $45, and which row proves it? Reconstruct the incident in a real StarRocks database and test your hypothesis.
 
-[Watch the preview](preview/demo.mp4) · [Captions](preview/demo.srt) · [Transcript](preview/transcript.md) · [Workstation setup](START.md)
+**Tools:** StarRocks 4.1.4 · Docker Compose · Python 3.14 · uv · VS Code · DataGrip.
 
-## Syllabus
+[Workstation setup](START.md) · [75-second preview](preview/demo.mp4) · [Captions](preview/demo.srt)
 
-| Lesson | Practical outcome |
-|---|---|
-| [01 · FE/BE architecture and the first mart](lessons/01/README.md) | Explain three daily totals from seven events |
+## Take the demo lab
 
+[Why does the report show $45 instead of $33?](weeks/01/01/README.md)
+
+After installing the tools, run these commands in the repository root. Open a DataGrip console as described in the setup guide and complete the lab exercises.
+
+```sh
+uv sync --locked
+uv run python lab.py up 01/01
+uv run python lab.py setup 01/01
+uv run python lab.py explore 01/01
+uv run python lab.py check 01/01
+```
+
+The ten-week syllabus covers OLAP architecture, table models, Stream Load and Kafka, CDC and backfills, analytical SQL, query profiles and materialized views, Iceberg, operations, AI and a capstone.

@@ -1,3 +1,0 @@
-name: sr41-en-01
-include:
-- ../../infra/compose.yaml
