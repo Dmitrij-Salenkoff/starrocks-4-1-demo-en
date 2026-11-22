@@ -1,6 +1,6 @@
 # Demo lab · StarRocks 4.1
 
-Two tables hold the same 131,072 events in 16 tablets each. One filter selects a single tablet in the first layout and all 16 in the second. Predict what changes when the caller supplies only an event_id. Test your prediction in the FE plan and inspect what the BE executed.
+StarRocks is an analytical database. It helps answer questions across many records. In your first lesson you will count cups sold at a small café, add one receipt and see the answer change. The commands and queries are provided.
 
 **Tools:** StarRocks 4.1.4 · Docker Compose · Python 3.14 · uv · VS Code · DataGrip.
 
@@ -8,18 +8,8 @@ Two tables hold the same 131,072 events in 16 tablets each. One filter selects a
 
 ## Take the demo lab
 
-[Where did 15 of the 16 tablets go?](weeks/01/01/README.md)
+[Your first query in StarRocks](weeks/01/01/README.md)
 
-After installing the tools, run these commands in the repository root. Open a DataGrip console as described in the setup guide and complete the lab exercises.
+Open the lesson guide above for a walkthrough from setup to your first answer in DataGrip. Allow 18 minutes for the video and another 35 minutes for hands-on practice after installation.
 
-```sh
-uv sync --locked
-uv run python lab.py up 01/01
-uv run python lab.py setup 01/01
-uv run python lab.py run 01/01
-uv run python weeks/01/01/run.py --profile
-uv run python lab.py check 01/01
-uv run python lab.py down 01/01
-```
-
-The twelve-week course continues into Stream Load, Kafka, CBO plans, pipeline profiles, MV refresh, Iceberg scans, workload routing and vector search.
+The full course spans twelve weeks. From this first report you will learn how data gets into the database, how the database works and how to investigate a slow or out-of-date report.

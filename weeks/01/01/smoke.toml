@@ -1,3 +1,41 @@
 [[step]]
-python = ["run.py", "--profile"]
-contains = "PASS: data matches and pruning reverses on event_id"
+file = "today.sql"
+rows = [[6, 3, 2]]
+
+[[step]]
+python = ["run.py"]
+contains = "The espresso on receipt 104 was counted once."
+
+[[step]]
+python = ["run.py"]
+contains = "Before adding the receipt: 8 cups, 4 receipts, 2 coffee types"
+
+[[step]]
+file = "today.sql"
+rows = [[8, 4, 2]]
+
+[[step]]
+file = "check.sql"
+rows = [[1]]
+
+[[step]]
+sql = "INSERT INTO cafe_sales VALUES (101, '2026-01-03', 'espresso', 2)"
+
+[[step]]
+file = "check.sql"
+rows = [[0]]
+
+[[step]]
+file = "setup.sql"
+
+[[step]]
+file = "today.sql"
+rows = [[6, 3, 2]]
+
+[[step]]
+sql = "SELECT SUM(cups) FROM cafe_sales"
+rows = [[10]]
+
+[[step]]
+file = "check.sql"
+rows = [[1]]

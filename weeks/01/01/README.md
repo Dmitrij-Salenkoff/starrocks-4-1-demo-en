@@ -1,66 +1,94 @@
-# Where did 15 of the 16 tablets go?
+# Your first query in StarRocks
 
 [Lesson slides (PDF)](slides.pdf)
 
-**28:00 video · 90-minute lab · StarRocks 4.1.4.** The same events produce the same sum in both tables, yet the FE schedules one tablet in the first case and sixteen in the second. Isolate the mechanism, reverse the result with a different access pattern and defend the decision using real profiles.
+**Demo lesson · 18-minute video · 35 minutes of hands-on practice · StarRocks 4.1.4**
 
-## Run the experiment
+At closing time on January 3, the café owner asks, “How many cups did we sell today?” A receipt can be for several cups. You will open a small café database, get the answer in DataGrip, then add a sale and see the answer change. An analytical database answers questions about a collection of sales, such as how many drinks a shift prepared. All the SQL is supplied.
 
-Open the repository root in VS Code. Start and seed the lab before connecting to the database. In DataGrip use MySQL on 127.0.0.1:9030, user root, an empty password and database course. All queries are supplied. Execute explore.sql one statement at a time and compare its output to the CLI.
+### Start with the café open · 5 minutes
+
+Start Docker Desktop. Open the **repository folder** in VS Code, then open **Terminal → New Terminal**. The folder contains `lab.py`. These commands use Docker Compose to start the practice database and load the café's opening receipts. Wait for each command to finish. The first download can take a few minutes.
 
 ```sh
 uv run python lab.py up 01/01
 uv run python lab.py setup 01/01
-uv run python lab.py explore 01/01
-uv run python lab.py check 01/01
-uv run python lab.py run 01/01
-uv run python weeks/01/01/run.py --profile
 ```
 
-## What the sixteen units represent
+Use Python 3.14 and uv as described in the repository setup guide. `setup` restores the opening receipts whenever you want a fresh attempt.
 
-The FE keeps catalog metadata and schedules work. The BE reads columnar segments. A native table’s partitions provide placement and maintenance boundaries. Within a partition the full distribution key determines a hash bucket; all rows for one key reach the same bucket. A bucket holds a logical tablet. Its physical copies are replicas. In this lab every tablet has one replica on the same BE. One machine can own many tablets.
+### Connect DataGrip · 6 minutes
 
-| Property | A · sr_date_tenant | B · sr_event_hash |
-|---|---|---|
-| Partitions | Four date ranges | One implicit partition |
-| Distribution | HASH(tenant_id), four buckets each | HASH(event_id), sixteen buckets |
-| Local sort key | event_day, tenant_id, event_id | event_day, tenant_id, event_id |
-| Inventory | 4 × 4 = 16 tablets | 1 × 16 = 16 tablets |
+1. In DataGrip choose **File → New → Data Source → MySQL**. StarRocks accepts this connection type.
+2. Set **Host** to `127.0.0.1`, **Port** to `9030`, **User** to `root` and **Database** to `course`. Leave the password empty for this local exercise.
+3. If DataGrip offers **Download missing driver files**, click it. Click **Test Connection**, then **OK**. Open a query console for this connection. Use the **Execute** button to run selected SQL.
 
-The generator spans January 1–4, 2026. The first less-than range also permits earlier dates; none occur here. There are 131,072 events. Every 32,768 consecutive IDs starts a new day. Tenant is ID modulo 128, cents is 100 plus ID modulo 1,000. B is copied from A. check.sql reconciles uniqueness, all business fields and the total 78,544,256 cents, so an offsetting loss and duplicate cannot hide behind an equal total.
+### Answer the owner's question · 8 minutes
 
-## Read the plan
+One row in `cafe_sales` represents one receipt for one kind of drink. Each row has a receipt number (`receipt_id`), a date (`sale_day`), a drink (`coffee`) and the number of cups on the receipt (`cups`). Open `weeks/01/01/today.sql` in VS Code. Copy its complete contents into your DataGrip console, select the statement and click **Execute**. The file asks this question:
 
-January 3 and tenant 7 select one date partition in A and a single bucket within it. Equality supplies the entire HASH(tenant_id) distribution key. Other tenants may share that bucket; the row predicate still does work. B has no date partition, and a tenant/day pair cannot identify an event_id. All sixteen buckets can contain matching rows. Both queries return 256 events and 154,528 cents.
+```sql
+SELECT SUM(cups) AS cups, COUNT(*) AS receipts,
+       COUNT(DISTINCT coffee) AS coffee_types
+FROM cafe_sales
+WHERE sale_day = '2026-01-03';
+```
 
-Copy the raw scan ratios. Their numerators are selected partitions and tablets. The tablet denominator can refer to the selected partitions, so the FE might print 1/4. For the claim “one of sixteen in this table,” get the sixteen independently from SHOW TABLET. The plan never drops the other tablets. Numeric IDs belong to your run and may change when tables are recreated.
+Read the result with its units: **6 cups, 3 receipts, 2 kinds of coffee**. One latte receipt can contain several cups. Open `weeks/01/01/explore.sql` and execute its first statement, reproduced below, to see which sales contributed.
 
-## Three tests
+```sql
+SELECT receipt_id, sale_day, coffee, cups
+FROM cafe_sales
+ORDER BY sale_day, receipt_id;
+```
 
-| Predicate | A · selected partitions / tablets | B · selected partitions / tablets | Rows / cents |
-|---|---|---|---|
-| Day and tenant | 1 / 1 | 1 / 16 | 256 / 154528 |
-| Day only | 1 / 4 | 1 / 16 | 32768 / 19662976 |
-| Event 65543 only | 4 / 16 | 1 / 1 | 1 / 643 |
+Find receipts 101, 102 and 103. Their cup counts are 2, 1 and 3. Receipt 100 is for four espressos on **January 2**. It belongs to yesterday's report. You can also run the lesson's ready-made queries from the VS Code terminal:
 
-The Python probe gets EXPLAIN text from the FE, counts actual tablet identities, executes each query and checks the selected counts and answer. An unexpected result includes the original plan. The --profile option also executes the focal pair with EXPLAIN ANALYZE. Read counters under the relevant scan operator. OutputRows and rows read can differ, and an omitted counter does not imply zero.
+```sh
+uv run python lab.py explore 01/01
+```
 
-## Independent investigation
+### Add the afternoon sale · 8 minutes
 
-1. **Inventory, 15 min.** Record FE, BE, tablets and replicas. Identify one tablet and the BE holding it.
-2. **Controlled comparison, 25 min.** Annotate predicate, selected counts and separate inventory in both plans. Add query results and name the controls that stayed fixed.
-3. **Negative control, 20 min.** Predict the day-only and event-only plans, then run the checker. Identify the full distribution key behind each change.
-4. **Profile, 20 min.** Save the actual scan node and available counters with units. Repeat the pair, mark it warm, and explain why sixteen times fewer tablets need not mean sixteen times lower latency.
-5. **Decision, 10 min.** Give recommendations for both workloads, one operational cost and a condition that would change your choice. Explain what a single BE cannot measure.
+Receipt 104 records two espressos on January 3. Before accepting it, write down your predictions for today's receipts, today's cups and yesterday's cups.
 
-For 80 day-and-tenant queries and 20 event lookups, total the selected tablets for each layout. Swap the mix and repeat. State what the count measures.
+```sh
+uv run python lab.py run 01/01
+```
 
-Save the evidence outside the stack, then run `uv run python lab.py down 01/01`.
+The command applies `weeks/01/01/add_receipt.sql` and deliberately sends the same sale again. Read the three lines covering the opening state, the first submission and the repeat. In DataGrip **execute the original January 3 query again**. A result tab shows the answer from the last time you ran that query. You should now see **8 cups, 4 receipts, 2 kinds of coffee**. Run the same terminal command a second time and execute the query again. How many copies of receipt 104 appear in the detail readout?
 
-## Sources
+### Explain and check · 8 minutes
 
-- [Data distribution](https://docs.starrocks.io/docs/table_design/data_distribution/)
-- [Query plan and scan ratios](https://docs.starrocks.io/docs/best_practices/query_tuning/query_planning/)
-- [EXPLAIN ANALYZE](https://docs.starrocks.io/docs/sql-reference/sql-statements/cluster-management/plan_profile/EXPLAIN_ANALYZE/)
-- [Query profiles](https://docs.starrocks.io/docs/best_practices/query_tuning/query_profile_overview/)
+Run this second report to compare dates on one screen.
+
+```sql
+SELECT sale_day, COUNT(*) AS receipts, SUM(cups) AS cups
+FROM cafe_sales
+GROUP BY sale_day
+ORDER BY sale_day;
+```
+
+1. Explain why the opening answer was six when only three receipts matched the date. Name the three receipt numbers.
+2. Compare the two days after adding receipt 104. What stayed at four cups? How did the all-days total move from ten to twelve?
+3. Show a second run of the same receipt. Verify that January 3 still has four receipts and eight cups. Save the two-day result or write it in your notes with its units.
+
+```sh
+uv run python lab.py check 01/01
+uv run python lab.py down 01/01
+```
+
+Run `check` before `down`. To practice again, use `up` and `setup`. If the stand is still running, `setup` alone restores January 3 to six cups.
+
+### If your screen looks different
+
+| What you see | What to do |
+| --- | --- |
+| The terminal cannot find `lab.py` | Open the folder containing `lab.py` in VS Code, then start a new terminal there. |
+| Test Connection fails | Confirm `up` finished, check host and port, then test again. If the database `course` is missing, run `setup`. |
+| DataGrip says no database is selected | Choose `course` in the console's database selector, or execute `USE course;` in that console. |
+| Today's result already says eight | An earlier attempt added 104. Run `setup`, then execute the query again for the opening state. |
+| You still see six after adding 104 | Execute the date query again in the same connection. Read the newest result tab. |
+| You see ten or twelve for January 3 | Check that the statement you executed includes the January 3 date condition. Those are totals across both days. |
+
+[DataGrip's MySQL connection guide](https://www.jetbrains.com/help/datagrip/mysql.html) · [StarRocks with Docker](https://docs.starrocks.io/docs/quick_start/shared-nothing/)

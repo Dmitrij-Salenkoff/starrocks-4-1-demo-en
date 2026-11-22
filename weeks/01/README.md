@@ -1,5 +1,5 @@
-# Week 1 · How StarRocks executes a query
+# Week 1 · Getting to know StarRocks
 
-Two tables hold the same 131,072 events in 16 tablets each. One filter selects a single tablet in the first layout and all 16 in the second. Predict what changes when the caller supplies only an event_id. Test your prediction in the FE plan and inspect what the BE executed.
+StarRocks is an analytical database. It helps answer questions across many records. In your first lesson you will count cups sold at a small café, add one receipt and see the answer change. The commands and queries are provided.
 
-- [01 · Where did 15 of the 16 tablets go?](01/README.md) · [Lesson slides (PDF)](01/slides.pdf)
+- [01 · Your first query in StarRocks](01/README.md) · [Lesson slides (PDF)](01/slides.pdf)
