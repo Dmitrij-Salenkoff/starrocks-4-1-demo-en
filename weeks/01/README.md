@@ -1,5 +1,5 @@
-# Week 1 · From source to metric
+# Week 1 · How StarRocks executes a query
 
-Find the extra $12 in the report. Then investigate two cutoffs that both show $23 while the underlying payments change. Reconcile the event log to an independent statement and prove which rows can be published.
+Two tables hold the same 131,072 events in 16 tablets each. One filter selects a single tablet in the first layout and all 16 in the second. Predict what changes when the caller supplies only an event_id. Test your prediction in the FE plan and inspect what the BE executed.
 
-- [01 · Why does the report show $45 instead of $33?](01/README.md) · [Lesson slides (PDF)](01/slides.pdf)
+- [01 · Where did 15 of the 16 tablets go?](01/README.md) · [Lesson slides (PDF)](01/slides.pdf)

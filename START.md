@@ -1,6 +1,6 @@
 # Workstation and first connection
 
-Bring working knowledge of SQL joins and aggregates, Python functions and CSV, and a terminal. In the first lab you will distinguish a redelivery from a second purchase. Open the repository root in VS Code and run all commands there.
+Bring working knowledge of SQL, Python and the terminal. The experiments supply the statements. In the demo you will measure how many tablets the FE selects across two identical datasets and test how routing changes for an event_id lookup. Open the repository root in VS Code and run commands there.
 
 ## Install and start
 
@@ -35,9 +35,9 @@ Expect a 4.1.4 build, shared_nothing mode, database course and a live backend. E
 ## Run an experiment
 
 1. Read `weeks/WW/LL/README.md` and write down a prediction before executing the query.
-2. Run `up` to start the lesson's Compose project. Run `setup` to recreate the example tables. Run the named Python driver when the lesson calls for it.
+2. Run `up` to start the lesson's Compose project. Run `setup` to recreate the example tables. Run `uv run python lab.py run 01/01` to test three predicates, then `uv run python weeks/01/01/run.py --profile` to profile the two scans.
 3. Open `explore.sql`, attach it to the course data source, select a statement and execute it with Cmd+Enter or Ctrl+Enter. To replay the entire walkthrough use `uv run python lab.py explore 01/01`.
-4. Save your own SQL, expected values and actual results separately. `uv run python lab.py check 01/01` verifies a specific data invariant. Use the lesson's acceptance criteria to evaluate your remaining evidence and reasoning.
+4. Save the FE plan, the relevant BE profile counters and an explanation of any discrepancy separately. `uv run python lab.py check 01/01` verifies a specific data invariant. Use the lesson's acceptance criteria to evaluate your remaining evidence and reasoning.
 5. Run `uv run python lab.py down 01/01` to remove that project's containers and volumes. Export work you want to keep before tearing down the stand.
 
 ## Diagnose a surprising result
