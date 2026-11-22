@@ -1,6 +1,6 @@
 # Demo lab · StarRocks 4.1
 
-One purchase was delivered twice. Why did the report rise from $33 to $45, and which row proves it? Reconstruct the incident in a real StarRocks database and test your hypothesis.
+Find the extra $12 in the report. Then investigate two cutoffs that both show $23 while the underlying payments change. Reconcile the event log to an independent statement and prove which rows can be published.
 
 **Tools:** StarRocks 4.1.4 · Docker Compose · Python 3.14 · uv · VS Code · DataGrip.
 
@@ -20,4 +20,4 @@ uv run python lab.py explore 01/01
 uv run python lab.py check 01/01
 ```
 
-The ten-week syllabus covers OLAP architecture, table models, Stream Load and Kafka, CDC and backfills, analytical SQL, query profiles and materialized views, Iceberg, operations, AI and a capstone.
+The twelve-week course takes you from OLAP architecture, Stream Load, Kafka and Iceberg to a payments mart, late data experiments, a snapshot-to-CDC handoff and a release decision for an analytical AI service.
