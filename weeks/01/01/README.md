@@ -117,3 +117,9 @@ uv run python lab.py down 01/01
 ```
 
 If the connection fails, confirm `up` has finished and recheck port 9030. If the table is missing, run `setup` and select database `course` in the console. If the sum is already eight, an earlier run added 104. Record that fact, then rerun `setup` for the opening example.
+
+## Further investigation
+
+The manager wants the January 3 report split by drink. Predict the number of result rows from the receipts and decide whether the total cups should change. Run the query, then use EXPLAIN in DataGrip. Which additional column must the scan supply?
+
+[DataGrip query](investigate.sql)
